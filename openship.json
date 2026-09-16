@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openship.io/openship.schema.json",
+  "framework": "docker",
+  "port": 2785,
+  "volumes": [
+    "openwa_data:/app/data"
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "2785",
+    "DATABASE_TYPE": "sqlite",
+    "STORAGE_TYPE": "local",
+    "STORAGE_LOCAL_PATH": "/app/data/media",
+    "SESSION_DATA_PATH": "/app/data/sessions",
+    "ENGINE_TYPE": "whatsapp-web.js"
+  }
+}
