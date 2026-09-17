@@ -32,6 +32,7 @@ const EXPECTED_PATCHER_ORDER = [
   'patch-wwebjs-participant-arity.js',
   'patch-wwebjs-block.js',
   'patch-wwebjs-group-description.js',
+  'patch-wwebjs-media-send.js',
   'patch-baileys-appstate.js',
   'patch-baileys-newsletter-create.js',
 ];
@@ -45,6 +46,7 @@ function makeRoot({
   statusPatcher = false,
   readySyncPatcher = false,
   participantArityPatcher = false,
+  mediaSendPatcher = false,
   baileysPatcher = false,
   baileysNewsletterPatcher = false,
 } = {}) {
@@ -57,6 +59,7 @@ function makeRoot({
     statusPatcher ||
     readySyncPatcher ||
     participantArityPatcher ||
+    mediaSendPatcher ||
     baileysPatcher ||
     baileysNewsletterPatcher
   ) {
@@ -79,6 +82,9 @@ function makeRoot({
   }
   if (participantArityPatcher) {
     fs.writeFileSync(path.join(root, 'scripts', 'patch-wwebjs-participant-arity.js'), '// stub\n');
+  }
+  if (mediaSendPatcher) {
+    fs.writeFileSync(path.join(root, 'scripts', 'patch-wwebjs-media-send.js'), '// stub\n');
   }
   if (baileysPatcher) {
     fs.writeFileSync(path.join(root, 'scripts', 'patch-baileys-appstate.js'), '// stub\n');
@@ -158,6 +164,14 @@ test('planSteps: participant-arity patcher plans its own best-effort repair', ()
   assert.equal(steps.length, 1);
   assert.equal(steps[0].command, process.execPath);
   assert.match(steps[0].args[0], /patch-wwebjs-participant-arity\.js$/);
+  assert.deepEqual(steps[0].args.slice(1), ['--best-effort']);
+});
+
+test('planSteps: media-send patcher plans its own best-effort repair', () => {
+  const steps = planSteps(makeRoot({ mediaSendPatcher: true }));
+  assert.equal(steps.length, 1);
+  assert.equal(steps[0].command, process.execPath);
+  assert.match(steps[0].args[0], /patch-wwebjs-media-send\.js$/);
   assert.deepEqual(steps[0].args.slice(1), ['--best-effort']);
 });
 
